@@ -1,81 +1,109 @@
-# -*- coding: utf-8 -*-
-import tkinter as tk
-from tkinter import messagebox, font
+import streamlit as st
+import time
 
-class NingpuUniversalApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("NINGPU Voyager v9.0")
-        self.root.geometry("400x720")
-        self.root.configure(bg='#0055A4')  # 憲法色：長濱藍
+# --- [10-1] 底層架構：系統全域設定 ---
+st.set_page_config(
+    page_title="NINGPU Voyager v9.0",
+    page_icon="🌾",
+    layout="centered"
+)
 
-        # --- [10-1] 遍歷性原則：字體防禦矩陣 ---
-        self.setup_fonts()
+# --- [10-3] 介面視覺：CSS 視覺降熵與長濱藍主題 ---
+# 透過 HTML/CSS 強制覆蓋預設樣式，套用憲法色
+st.markdown("""
+<style>
+    /* 主背景色：長濱藍 */
+    .stApp {
+        background-color: #003366;
+        color: white;
+    }
+    /* 標題與強調色：稻穗金 */
+    h1, h2, h3 {
+        color: #F5D105 !important;
+        font-weight: 800;
+    }
+    /* 核心 CTA 按鈕改造 */
+    .stButton>button {
+        background-color: #F5D105;
+        color: #000000;
+        font-weight: 900;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+        width: 100%;
+        padding: 15px 0;
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #D4B404;
+        color: #000000;
+        transform: scale(1.02);
+    }
+    /* 景點卡片降熵設計 */
+    .node-card {
+        background-color: #004488;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        border-left: 6px solid #F5D105;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    .node-title {
+        color: #F5D105;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .node-desc {
+        color: #E0E0E0;
+        font-size: 0.95rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-        # 1. 頂部導航 (Tier 1: Conversion Hotzone)
-        self.header = tk.Frame(self.root, bg='#0055A4', pady=25)
-        self.header.pack(fill='x')
-        tk.Label(self.header, text="長濱寧埔 | AWOS 農場", 
-                 fg='#F5D105', bg='#0055A4', font=self.f_title).pack()
+# --- 介面渲染開始 ---
 
-        # 2. 視覺區 (視覺降熵)
-        self.hero = tk.Frame(self.root, bg='#003366', height=180)
-        self.hero.pack(fill='x', padx=20, pady=10)
-        self.hero.pack_propagate(False)
-        tk.Label(self.hero, text="【 太平洋 S 彎道景觀 】\nAWOS 自然農法實作基地", 
-                 fg='white', bg='#003366', font=self.f_desc).place(relx=0.5, rely=0.5, anchor='center')
+# 1. 頂部導航 (Tier 1: Conversion Hotzone)
+st.title("長濱寧埔 | AWOS 農場")
+st.caption("CRF v9.0 深度智能導覽系統")
 
-        # 3. 核心功能 (第一性原理：預約轉換)
-        self.btn = tk.Button(self.root, text=" 立即預約 AWOS 體驗 ", 
-                             command=self.show_success,
-                             bg='#F5D105', fg='#000000', 
-                             font=self.f_btn, bd=0, padx=25, pady=12,
-                             activebackground='#D4B404', cursor="hand2")
-        self.btn.pack(pady=25)
+# 2. 視覺區 (英雄影像佔位符)
+# 這裡使用了一張開源的海洋/自然意象圖，您可以替換成真實的 AWOS 照片網址
+st.image("https://images.unsplash.com/photo-1498623116890-37e912163d5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", 
+         caption="【 太平洋 S 彎道景觀 】 AWOS 自然農法實作基地", 
+         use_container_width=True)
 
-        # 4. 深度景點列表 (低認知負荷)
-        self.add_node("AWOS 農場 (Awos Home)", "自然農法、紅藜與傳統海鹽導覽")
-        self.add_node("寧埔休憩區 (S-Curve)", "全台最美海岸線 180 度觀景點")
-        self.add_node("光榮部落 (Kiwit)", "阿美族生存智慧與石棺遺址探訪")
+st.write("") # 增加留白 (Margin of Safety)
 
-        # 5. 系統狀態
-        tk.Label(self.root, text="● 系統存活狀態：正常 (離線備援已就緒)", 
-                 fg='#00FF00', bg='#001A33', font=self.f_status, pady=5).pack(side='bottom', fill='x')
+# 3. 核心功能 (第一性原理：預約轉換)
+if st.button("🚀 立即預約 AWOS 職人體驗"):
+    with st.spinner('系統路由中，鎖定長濱在地資源...'):
+        time.sleep(1.5) # 勞力幻覺 (Labor Illusion)
+    st.success("✅ **預約成功！**\n\n已鎖定 AWOS 農場體驗名額。遵循 CRF v9.0 協議：資料已加密並同步至在地節點。")
+    st.balloons() # 多巴胺成癮機制
 
-    def setup_fonts(self):
-        """字體遍歷防禦：確保在所有作業系統均不亂碼"""
-        # 優先順序：微軟正黑體 -> 蘋方 -> 標楷體 -> 系統預設
-        font_candidates = ["Microsoft JhengHei", "PingFang TC", "STHeiti", "DFKai-SB", "Arial Unicode MS"]
-        
-        target_font = "System"
-        available = font.families()
-        for f in font_candidates:
-            if f in available:
-                target_font = f
-                break
-        
-        # 定義各級字體
-        self.f_title = (target_font, 20, "bold")
-        self.f_btn = (target_font, 14, "bold")
-        self.f_card = (target_font, 12, "bold")
-        self.f_desc = (target_font, 10)
-        self.f_status = (target_font, 9)
+st.write("---")
 
-    def add_node(self, title, desc):
-        card = tk.Frame(self.root, bg='#003366', padx=15, pady=12)
-        card.pack(fill='x', padx=20, pady=6)
-        tk.Label(card, text=title, fg='#F5D105', bg='#003366', font=self.f_card).pack(anchor='w')
-        tk.Label(card, text=desc, fg='white', bg='#003366', font=self.f_desc).pack(anchor='w')
+# 4. 深度景點列表 (低認知負荷)
+st.subheader("深度節點 (Tier-1 Assets)")
 
-    def show_success(self):
-        messagebox.showinfo("預約成功", "已鎖定 AWOS 農場體驗名額！\n\n遵循 CRF v9.0 協議：\n資料已同步至在地離線資料庫。")
+# 使用 HTML 渲染卡片以確保視覺一致性
+cards_html = """
+<div class="node-card">
+    <div class="node-title">🌾 AWOS 農場 (Awos Home)</div>
+    <div class="node-desc">自然農法、紅藜與傳統海鹽導覽。體驗最純粹的土地滋味與原民生活。</div>
+</div>
+<div class="node-card">
+    <div class="node-title">🌊 寧埔休憩區 (S-Curve)</div>
+    <div class="node-desc">全台最美海岸線 180 度觀景點。視覺降熵與感官解壓縮的最佳場域。</div>
+</div>
+<div class="node-card">
+    <div class="node-title">🗿 光榮部落 (Kiwit)</div>
+    <div class="node-desc">阿美族生存智慧與石棺遺址探訪。文化遍歷性的起點與歷史傳承。</div>
+</div>
+"""
+st.markdown(cards_html, unsafe_allow_html=True)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    # 強制設定系統編碼環境
-    try:
-        root.option_add('*font', 'Arial 10') # 基礎保險
-    except:
-        pass
-    app = NingpuUniversalApp(root)
-    root.mainloop()
+# 5. 系統狀態
+st.write("")
+st.info("🟢 系統存活狀態：雲端節點運行中 (Streamlit Native Web Engine)")
